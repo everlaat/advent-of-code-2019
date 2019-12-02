@@ -4,3 +4,4 @@ package-lock.json
 .coverage
 *.log
 elm-stuff
+app/script.js

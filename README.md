@@ -2,11 +2,10 @@
 
 My [Advent of Code 2019](https://adventofcode.com/2019) Solutions in [Elm](https://elm-lang.org).
 
-## Installation
+## Compile
 
-`yarn install`
+run `make` on the root of this project and then you can open up app/index.html in your favourite browser.
 
-
-## Running the solutions
+## Running the tests
 
 `yarn run elm-test`
