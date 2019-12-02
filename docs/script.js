@@ -4310,6 +4310,43 @@ function _Browser_load(url)
 		}
 	}));
 }
+
+
+
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
 var $elm$core$Basics$EQ = 1;
 var $elm$core$Basics$LT = 0;
 var $elm$core$List$cons = _List_cons;
@@ -5390,6 +5427,361 @@ var $author$project$Solvers$Day01$partOne = _Utils_Tuple2(
 			$author$project$Solvers$Day01$inputToMassList,
 			$elm$core$Result$map(
 				A2($elm$core$Basics$composeR, $author$project$Solvers$Day01$fuelRequired, $author$project$Solvers$Day01$fuelToString)))));
+var $elm$core$Result$andThen = F2(
+	function (callback, result) {
+		if (!result.$) {
+			var value = result.a;
+			return callback(value);
+		} else {
+			var msg = result.a;
+			return $elm$core$Result$Err(msg);
+		}
+	});
+var $author$project$Solvers$Day02$IntCodeProgram = $elm$core$Basics$identity;
+var $elm$core$Basics$composeL = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var $author$project$Solvers$Day02$IntCode = $elm$core$Basics$identity;
+var $author$project$Solvers$Day02$intCodeFromString = function (a) {
+	return A2(
+		$elm$core$Result$fromMaybe,
+		'Can\'t convert ' + (a + ' in to a Int'),
+		A2(
+			$elm$core$Maybe$map,
+			$elm$core$Basics$identity,
+			$elm$core$String$toInt(a)));
+};
+var $elm$core$String$trim = _String_trim;
+var $author$project$Solvers$Day02$inputToIntCodeProgram = A2(
+	$elm$core$Basics$composeR,
+	$author$project$Lib$Input$toString,
+	A2(
+		$elm$core$Basics$composeR,
+		$elm$core$String$split(','),
+		A2(
+			$elm$core$Basics$composeR,
+			$elm$core$List$map(
+				A2($elm$core$Basics$composeL, $author$project$Solvers$Day02$intCodeFromString, $elm$core$String$trim)),
+			A2(
+				$elm$core$Basics$composeR,
+				A2(
+					$elm$core$List$foldl,
+					F2(
+						function (resultIntCode, result) {
+							var _v0 = _Utils_Tuple2(resultIntCode, result);
+							if (_v0.b.$ === 1) {
+								var err = _v0.b.a;
+								return $elm$core$Result$Err(err);
+							} else {
+								if (!_v0.a.$) {
+									var intCode = _v0.a.a;
+									var r = _v0.b.a;
+									return $elm$core$Result$Ok(
+										A2($elm$core$List$cons, intCode, r));
+								} else {
+									var err = _v0.a.a;
+									return $elm$core$Result$Err(err);
+								}
+							}
+						}),
+					$elm$core$Result$Ok(_List_Nil)),
+				$elm$core$Result$map(
+					A2($elm$core$Basics$composeL, $elm$core$Basics$identity, $elm$core$List$reverse))))));
+var $author$project$Solvers$Day02$intCodeProgramToString = function (_v0) {
+	var listOfIntCode = _v0;
+	return A2(
+		$elm$core$String$join,
+		',',
+		A2(
+			$elm$core$List$map,
+			function (_v1) {
+				var _int = _v1;
+				return $elm$core$String$fromInt(_int);
+			},
+			listOfIntCode));
+};
+var $author$project$Solvers$Day02$Memory = $elm$core$Basics$identity;
+var $elm$core$Array$fromListHelp = F3(
+	function (list, nodeList, nodeListSize) {
+		fromListHelp:
+		while (true) {
+			var _v0 = A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, list);
+			var jsArray = _v0.a;
+			var remainingItems = _v0.b;
+			if (_Utils_cmp(
+				$elm$core$Elm$JsArray$length(jsArray),
+				$elm$core$Array$branchFactor) < 0) {
+				return A2(
+					$elm$core$Array$builderToArray,
+					true,
+					{e: nodeList, b: nodeListSize, d: jsArray});
+			} else {
+				var $temp$list = remainingItems,
+					$temp$nodeList = A2(
+					$elm$core$List$cons,
+					$elm$core$Array$Leaf(jsArray),
+					nodeList),
+					$temp$nodeListSize = nodeListSize + 1;
+				list = $temp$list;
+				nodeList = $temp$nodeList;
+				nodeListSize = $temp$nodeListSize;
+				continue fromListHelp;
+			}
+		}
+	});
+var $elm$core$Array$fromList = function (list) {
+	if (!list.b) {
+		return $elm$core$Array$empty;
+	} else {
+		return A3($elm$core$Array$fromListHelp, list, _List_Nil, 0);
+	}
+};
+var $author$project$Solvers$Day02$intCodeProgramToMemory = function (_v0) {
+	var listOfIntCodes = _v0;
+	return $elm$core$Array$fromList(
+		A2(
+			$elm$core$List$map,
+			function (_v1) {
+				var a = _v1;
+				return a;
+			},
+			listOfIntCodes));
+};
+var $author$project$Solvers$Day02$memoryToIntCodeProgram = function (_v0) {
+	var memory = _v0;
+	return A2(
+		$elm$core$List$map,
+		$elm$core$Basics$identity,
+		$elm$core$Array$toList(memory));
+};
+var $author$project$Solvers$Day02$Pointer = $elm$core$Basics$identity;
+var $author$project$Solvers$Day02$pointerStart = 0;
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Bitwise$shiftRightZfBy = _Bitwise_shiftRightZfBy;
+var $elm$core$Array$bitMask = 4294967295 >>> (32 - $elm$core$Array$shiftStep);
+var $elm$core$Basics$ge = _Utils_ge;
+var $elm$core$Elm$JsArray$unsafeGet = _JsArray_unsafeGet;
+var $elm$core$Array$getHelp = F3(
+	function (shift, index, tree) {
+		getHelp:
+		while (true) {
+			var pos = $elm$core$Array$bitMask & (index >>> shift);
+			var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+			if (!_v0.$) {
+				var subTree = _v0.a;
+				var $temp$shift = shift - $elm$core$Array$shiftStep,
+					$temp$index = index,
+					$temp$tree = subTree;
+				shift = $temp$shift;
+				index = $temp$index;
+				tree = $temp$tree;
+				continue getHelp;
+			} else {
+				var values = _v0.a;
+				return A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, values);
+			}
+		}
+	});
+var $elm$core$Bitwise$shiftLeftBy = _Bitwise_shiftLeftBy;
+var $elm$core$Array$tailIndex = function (len) {
+	return (len >>> 5) << 5;
+};
+var $elm$core$Array$get = F2(
+	function (index, _v0) {
+		var len = _v0.a;
+		var startShift = _v0.b;
+		var tree = _v0.c;
+		var tail = _v0.d;
+		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? $elm$core$Maybe$Nothing : ((_Utils_cmp(
+			index,
+			$elm$core$Array$tailIndex(len)) > -1) ? $elm$core$Maybe$Just(
+			A2($elm$core$Elm$JsArray$unsafeGet, $elm$core$Array$bitMask & index, tail)) : $elm$core$Maybe$Just(
+			A3($elm$core$Array$getHelp, startShift, index, tree)));
+	});
+var $author$project$Solvers$Day02$pointerNextOperation = function (_v0) {
+	var a = _v0;
+	return a + 4;
+};
+var $elm$core$Maybe$map2 = F3(
+	function (func, ma, mb) {
+		if (ma.$ === 1) {
+			return $elm$core$Maybe$Nothing;
+		} else {
+			var a = ma.a;
+			if (mb.$ === 1) {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var b = mb.a;
+				return $elm$core$Maybe$Just(
+					A2(func, a, b));
+			}
+		}
+	});
+var $author$project$Solvers$Day02$calcOperator = F4(
+	function (f, _v0, _v1, _v2) {
+		var a = _v0;
+		var b = _v1;
+		var m = _v2;
+		return A3(
+			$elm$core$Maybe$map2,
+			f,
+			A2($elm$core$Array$get, a, m),
+			A2($elm$core$Array$get, b, m));
+	});
+var $elm$core$Maybe$map3 = F4(
+	function (func, ma, mb, mc) {
+		if (ma.$ === 1) {
+			return $elm$core$Maybe$Nothing;
+		} else {
+			var a = ma.a;
+			if (mb.$ === 1) {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var b = mb.a;
+				if (mc.$ === 1) {
+					return $elm$core$Maybe$Nothing;
+				} else {
+					var c = mc.a;
+					return $elm$core$Maybe$Just(
+						A3(func, a, b, c));
+				}
+			}
+		}
+	});
+var $elm$core$Elm$JsArray$unsafeSet = _JsArray_unsafeSet;
+var $elm$core$Array$setHelp = F4(
+	function (shift, index, value, tree) {
+		var pos = $elm$core$Array$bitMask & (index >>> shift);
+		var _v0 = A2($elm$core$Elm$JsArray$unsafeGet, pos, tree);
+		if (!_v0.$) {
+			var subTree = _v0.a;
+			var newSub = A4($elm$core$Array$setHelp, shift - $elm$core$Array$shiftStep, index, value, subTree);
+			return A3(
+				$elm$core$Elm$JsArray$unsafeSet,
+				pos,
+				$elm$core$Array$SubTree(newSub),
+				tree);
+		} else {
+			var values = _v0.a;
+			var newLeaf = A3($elm$core$Elm$JsArray$unsafeSet, $elm$core$Array$bitMask & index, value, values);
+			return A3(
+				$elm$core$Elm$JsArray$unsafeSet,
+				pos,
+				$elm$core$Array$Leaf(newLeaf),
+				tree);
+		}
+	});
+var $elm$core$Array$set = F3(
+	function (index, value, array) {
+		var len = array.a;
+		var startShift = array.b;
+		var tree = array.c;
+		var tail = array.d;
+		return ((index < 0) || (_Utils_cmp(index, len) > -1)) ? array : ((_Utils_cmp(
+			index,
+			$elm$core$Array$tailIndex(len)) > -1) ? A4(
+			$elm$core$Array$Array_elm_builtin,
+			len,
+			startShift,
+			tree,
+			A3($elm$core$Elm$JsArray$unsafeSet, $elm$core$Array$bitMask & index, value, tail)) : A4(
+			$elm$core$Array$Array_elm_builtin,
+			len,
+			startShift,
+			A4($elm$core$Array$setHelp, startShift, index, value, tree),
+			tail));
+	});
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $author$project$Solvers$Day02$runOperator = F3(
+	function (f, _v0, _v1) {
+		var p = _v0;
+		var m = _v1;
+		return A2(
+			$elm$core$Maybe$withDefault,
+			$elm$core$Result$Err('Unable to read out all positions'),
+			A2(
+				$elm$core$Maybe$map,
+				function (m_a) {
+					if (!m_a.$) {
+						var a = m_a.a;
+						return $elm$core$Result$Ok(a);
+					} else {
+						return $elm$core$Result$Err('Error calculating value');
+					}
+				},
+				A4(
+					$elm$core$Maybe$map3,
+					F3(
+						function (a, b, c) {
+							return A2(
+								$elm$core$Maybe$map,
+								function (value) {
+									return A3($elm$core$Array$set, c, value, m);
+								},
+								A4($author$project$Solvers$Day02$calcOperator, f, a, b, m));
+						}),
+					A2($elm$core$Array$get, p + 1, m),
+					A2($elm$core$Array$get, p + 2, m),
+					A2($elm$core$Array$get, p + 3, m))));
+	});
+var $author$project$Solvers$Day02$run = F2(
+	function (pointer, memory) {
+		var p = pointer;
+		var m = memory;
+		var _v0 = A2($elm$core$Array$get, p, m);
+		if (!_v0.$) {
+			switch (_v0.a) {
+				case 1:
+					return A2(
+						$elm$core$Result$andThen,
+						$author$project$Solvers$Day02$run(
+							$author$project$Solvers$Day02$pointerNextOperation(pointer)),
+						A3($author$project$Solvers$Day02$runOperator, $elm$core$Basics$add, pointer, memory));
+				case 2:
+					return A2(
+						$elm$core$Result$andThen,
+						$author$project$Solvers$Day02$run(
+							$author$project$Solvers$Day02$pointerNextOperation(pointer)),
+						A3($author$project$Solvers$Day02$runOperator, $elm$core$Basics$mul, pointer, memory));
+				case 99:
+					return $elm$core$Result$Ok(memory);
+				default:
+					var x = _v0.a;
+					return $elm$core$Result$Err(
+						'unknown operation code ' + $elm$core$String$fromInt(x));
+			}
+		} else {
+			return $elm$core$Result$Err(
+				'Pointer out of bounds ' + $elm$core$String$fromInt(p));
+		}
+	});
+var $author$project$Solvers$Day02$runIntCodeProgram = A2(
+	$elm$core$Basics$composeR,
+	$author$project$Solvers$Day02$intCodeProgramToMemory,
+	A2(
+		$elm$core$Basics$composeR,
+		$author$project$Solvers$Day02$run($author$project$Solvers$Day02$pointerStart),
+		$elm$core$Result$map($author$project$Solvers$Day02$memoryToIntCodeProgram)));
+var $author$project$Solvers$Day02$runInput = A2(
+	$elm$core$Basics$composeR,
+	$author$project$Solvers$Day02$inputToIntCodeProgram,
+	A2(
+		$elm$core$Basics$composeR,
+		$elm$core$Result$andThen($author$project$Solvers$Day02$runIntCodeProgram),
+		$elm$core$Result$map($author$project$Solvers$Day02$intCodeProgramToString)));
+var $author$project$Solvers$Day02$partOne = _Utils_Tuple2(
+	'Day 02, Part One',
+	$author$project$Lib$Solver$make($author$project$Solvers$Day02$runInput));
 var $author$project$Solvers$Day01$calcMassOfFuel = function (_v0) {
 	var a = _v0;
 	return a * 1;
@@ -5423,7 +5815,7 @@ var $author$project$Solvers$Day01$partTwo = _Utils_Tuple2(
 				A2($elm$core$Basics$composeR, $author$project$Solvers$Day01$fuelRequiredIncludingAddedFuelMass, $author$project$Solvers$Day01$fuelToString)))));
 var $author$project$Main$solvers = $author$project$Lib$Solver$fromList(
 	_List_fromArray(
-		[$author$project$Solvers$Day01$partOne, $author$project$Solvers$Day01$partTwo]));
+		[$author$project$Solvers$Day01$partOne, $author$project$Solvers$Day01$partTwo, $author$project$Solvers$Day02$partOne]));
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -5481,11 +5873,6 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			$elm$json$Json$Encode$string(string));
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
-var $elm$core$Basics$composeL = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
-	});
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$Attributes$href = function (url) {
@@ -5574,15 +5961,6 @@ var $elm$html$Html$Attributes$boolProperty = F2(
 	});
 var $elm$html$Html$Attributes$selected = $elm$html$Html$Attributes$boolProperty('selected');
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
 var $author$project$Main$viewSolverOption = F3(
 	function (maybeSolver, label, _v0) {
 		var isSelected = A2(

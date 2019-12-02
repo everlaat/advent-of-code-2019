@@ -8,6 +8,7 @@ import Lib.Input as Input exposing (Input)
 import Lib.Output exposing (Output)
 import Lib.Solver as Solver exposing (Solver, Solvers)
 import Solvers.Day01 as Day01
+import Solvers.Day02 as Day02
 
 
 solvers : Solvers
@@ -15,6 +16,7 @@ solvers =
     Solver.fromList
         [ Day01.partOne
         , Day01.partTwo
+        , Day02.partOne
         ]
 
 
