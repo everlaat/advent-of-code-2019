@@ -21,6 +21,14 @@ body {
     background-color: #eee;
 }
 
+.Wrapper p {
+    color: #333;
+}
+
+.Wrapper a {
+    color: #333;
+}
+
 .Wrapper_Input {
     border: 1px solid #ddd;
     background-color: #fff;

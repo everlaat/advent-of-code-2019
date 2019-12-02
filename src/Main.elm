@@ -77,7 +77,20 @@ view :
     -> Html Msg
 view model =
     Html.div [ Attr.class "Wrapper" ]
-        [ Html.div [ Attr.class "Wrapper_Input" ]
+        [ Html.h1 [] [ Html.text "Advent Of Code 2019" ]
+        , Html.p []
+            [ Html.text "These are the "
+            , Html.a [ Attr.href "https://adventofcode.com/2019" ] [ Html.text "Advent Of Code 2019" ]
+            , Html.text " solutions from "
+            , Html.a [ Attr.href "https://github.com/everlaat" ] [ Html.text "Elvin Verlaat" ]
+            , Html.text "."
+            ]
+        , Html.p []
+            [ Html.text "Check out "
+            , Html.a [ Attr.href "https://github.com/everlaat/advent-of-code-2019" ] [ Html.text "the source" ]
+            , Html.text " at Github. "
+            ]
+        , Html.div [ Attr.class "Wrapper_Input" ]
             [ Html.textarea
                 [ Event.onInput (OnInput << Input.fromString)
                 , Attr.placeholder "Input"

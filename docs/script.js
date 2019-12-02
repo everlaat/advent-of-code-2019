@@ -5470,6 +5470,7 @@ var $author$project$Main$OnSolverSelect = function (a) {
 	return {$: 1, a: a};
 };
 var $author$project$Main$Solve = {$: 2};
+var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -5486,6 +5487,13 @@ var $elm$core$Basics$composeL = F3(
 			f(x));
 	});
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
 var $author$project$Lib$Solver$map = F2(
 	function (f, _v0) {
 		var dict = _v0;
@@ -5549,6 +5557,7 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
 var $elm$html$Html$option = _VirtualDom_node('option');
+var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
 var $elm$html$Html$pre = _VirtualDom_node('pre');
 var $elm$html$Html$select = _VirtualDom_node('select');
@@ -5607,6 +5616,60 @@ var $author$project$Main$view = function (model) {
 			]),
 		_List_fromArray(
 			[
+				A2(
+				$elm$html$Html$h1,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Advent Of Code 2019')
+					])),
+				A2(
+				$elm$html$Html$p,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('These are the '),
+						A2(
+						$elm$html$Html$a,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$href('https://adventofcode.com/2019')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Advent Of Code 2019')
+							])),
+						$elm$html$Html$text(' solutions from '),
+						A2(
+						$elm$html$Html$a,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$href('https://github.com/everlaat')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Elvin Verlaat')
+							])),
+						$elm$html$Html$text('.')
+					])),
+				A2(
+				$elm$html$Html$p,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Check out '),
+						A2(
+						$elm$html$Html$a,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$href('https://github.com/everlaat/advent-of-code-2019')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('the source')
+							])),
+						$elm$html$Html$text(' at Github. ')
+					])),
 				A2(
 				$elm$html$Html$div,
 				_List_fromArray(
