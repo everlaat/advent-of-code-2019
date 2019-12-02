@@ -4,14 +4,6 @@ import Expect
 import Test exposing (Test, describe, test)
 
 
-type Mass
-    = Mass Int
-
-
-type Fuel
-    = Fuel Int
-
-
 tests : List Test
 tests =
     [ describe "Part One"
@@ -45,6 +37,14 @@ tests =
     ]
 
 
+type Mass
+    = Mass Int
+
+
+type Fuel
+    = Fuel Int
+
+
 fuelRequired :
     List Mass
     -> Fuel
@@ -65,15 +65,7 @@ fuelRequiredForMass :
     Mass
     -> Fuel
 fuelRequiredForMass (Mass mass) =
-    let
-        required =
-            (mass // 3) - 2
-    in
-    if required <= 0 then
-        Fuel 0
-
-    else
-        Fuel required
+    Fuel (max 0 ((mass // 3) - 2))
 
 
 fuelToMass :
