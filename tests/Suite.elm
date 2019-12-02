@@ -1,6 +1,6 @@
 module Suite exposing (suite)
 
-import Solutions.Day01 as Day01
+import Solvers.Day01 as Day01
 import Test exposing (Test, describe)
 
 
