@@ -5813,9 +5813,65 @@ var $author$project$Solvers$Day01$partTwo = _Utils_Tuple2(
 			$author$project$Solvers$Day01$inputToMassList,
 			$elm$core$Result$map(
 				A2($elm$core$Basics$composeR, $author$project$Solvers$Day01$fuelRequiredIncludingAddedFuelMass, $author$project$Solvers$Day01$fuelToString)))));
+var $author$project$Solvers$Day02$find_ = F3(
+	function (_v0, query, memory) {
+		var noun = _v0.a;
+		var verb = _v0.b;
+		var m = memory;
+		return A2(
+			$elm$core$Result$andThen,
+			function (_v1) {
+				var result = _v1;
+				return _Utils_eq(
+					A2($elm$core$Array$get, 0, result),
+					$elm$core$Maybe$Just(query)) ? $elm$core$Result$Ok(
+					_Utils_Tuple2(noun, verb)) : (((noun === 99) && (verb === 99)) ? $elm$core$Result$Err('out of bounds') : ((noun === 99) ? A3(
+					$author$project$Solvers$Day02$find_,
+					_Utils_Tuple2(0, verb + 1),
+					query,
+					memory) : A3(
+					$author$project$Solvers$Day02$find_,
+					_Utils_Tuple2(noun + 1, verb),
+					query,
+					memory)));
+			},
+			A2(
+				$author$project$Solvers$Day02$run,
+				0,
+				A3(
+					$elm$core$Array$set,
+					2,
+					verb,
+					A3($elm$core$Array$set, 1, noun, m))));
+	});
+var $author$project$Solvers$Day02$find = function (query) {
+	return A2(
+		$elm$core$Basics$composeR,
+		$author$project$Solvers$Day02$intCodeProgramToMemory,
+		A2(
+			$author$project$Solvers$Day02$find_,
+			_Utils_Tuple2(0, 0),
+			query));
+};
+var $author$project$Solvers$Day02$findInput = A2(
+	$elm$core$Basics$composeR,
+	$author$project$Solvers$Day02$inputToIntCodeProgram,
+	A2(
+		$elm$core$Basics$composeR,
+		$elm$core$Result$andThen(
+			$author$project$Solvers$Day02$find(19690720)),
+		$elm$core$Result$map(
+			function (_v0) {
+				var noun = _v0.a;
+				var verb = _v0.b;
+				return $elm$core$String$fromInt((100 * noun) + verb);
+			})));
+var $author$project$Solvers$Day02$partTwo = _Utils_Tuple2(
+	'Day 02, Part Two',
+	$author$project$Lib$Solver$make($author$project$Solvers$Day02$findInput));
 var $author$project$Main$solvers = $author$project$Lib$Solver$fromList(
 	_List_fromArray(
-		[$author$project$Solvers$Day01$partOne, $author$project$Solvers$Day01$partTwo, $author$project$Solvers$Day02$partOne]));
+		[$author$project$Solvers$Day01$partOne, $author$project$Solvers$Day01$partTwo, $author$project$Solvers$Day02$partOne, $author$project$Solvers$Day02$partTwo]));
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {

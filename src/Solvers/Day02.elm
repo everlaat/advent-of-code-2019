@@ -1,4 +1,4 @@
-module Solvers.Day02 exposing (partOne, tests)
+module Solvers.Day02 exposing (partOne, partTwo, tests)
 
 import Array exposing (Array)
 import Expect
@@ -12,6 +12,13 @@ partOne : ( String, Solver )
 partOne =
     ( "Day 02, Part One"
     , make runInput
+    )
+
+
+partTwo : ( String, Solver )
+partTwo =
+    ( "Day 02, Part Two"
+    , make findInput
     )
 
 
@@ -60,6 +67,13 @@ runInput =
         >> Result.map intCodeProgramToString
 
 
+findInput : Input -> Output
+findInput =
+    inputToIntCodeProgram
+        >> Result.andThen (find 19690720)
+        >> Result.map (\( noun, verb ) -> String.fromInt (100 * noun + verb))
+
+
 runIntCodeProgram :
     IntCodeProgram
     -> Result String IntCodeProgram
@@ -67,6 +81,38 @@ runIntCodeProgram =
     intCodeProgramToMemory
         >> run pointerStart
         >> Result.map memoryToIntCodeProgram
+
+
+find :
+    Int
+    -> IntCodeProgram
+    -> Result String ( Int, Int )
+find query =
+    intCodeProgramToMemory
+        >> find_ ( 0, 0 ) query
+
+
+find_ : ( Int, Int ) -> Int -> Memory -> Result String ( Int, Int )
+find_ ( noun, verb ) query ((Memory m) as memory) =
+    (Array.set 1 noun m
+        |> Array.set 2 verb
+        |> Memory
+    )
+        |> run (Pointer 0)
+        |> Result.andThen
+            (\(Memory result) ->
+                if Array.get 0 result == Just query then
+                    Ok ( noun, verb )
+
+                else if noun == 99 && verb == 99 then
+                    Err "out of bounds"
+
+                else if noun == 99 then
+                    find_ ( 0, verb + 1 ) query memory
+
+                else
+                    find_ ( noun + 1, verb ) query memory
+            )
 
 
 run :

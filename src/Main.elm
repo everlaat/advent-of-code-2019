@@ -17,6 +17,7 @@ solvers =
         [ Day01.partOne
         , Day01.partTwo
         , Day02.partOne
+        , Day02.partTwo
         ]
 
 
