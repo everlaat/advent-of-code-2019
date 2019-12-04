@@ -5782,6 +5782,363 @@ var $author$project$Solvers$Day02$runInput = A2(
 var $author$project$Solvers$Day02$partOne = _Utils_Tuple2(
 	'Day 02, Part One',
 	$author$project$Lib$Solver$make($author$project$Solvers$Day02$runInput));
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $elm$core$Set$Set_elm_builtin = $elm$core$Basics$identity;
+var $elm$core$Dict$foldl = F3(
+	function (func, acc, dict) {
+		foldl:
+		while (true) {
+			if (dict.$ === -2) {
+				return acc;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var $temp$func = func,
+					$temp$acc = A3(
+					func,
+					key,
+					value,
+					A3($elm$core$Dict$foldl, func, acc, left)),
+					$temp$dict = right;
+				func = $temp$func;
+				acc = $temp$acc;
+				dict = $temp$dict;
+				continue foldl;
+			}
+		}
+	});
+var $elm$core$Dict$filter = F2(
+	function (isGood, dict) {
+		return A3(
+			$elm$core$Dict$foldl,
+			F3(
+				function (k, v, d) {
+					return A2(isGood, k, v) ? A3($elm$core$Dict$insert, k, v, d) : d;
+				}),
+			$elm$core$Dict$empty,
+			dict);
+	});
+var $elm$core$Dict$member = F2(
+	function (key, dict) {
+		var _v0 = A2($elm$core$Dict$get, key, dict);
+		if (!_v0.$) {
+			return true;
+		} else {
+			return false;
+		}
+	});
+var $elm$core$Dict$intersect = F2(
+	function (t1, t2) {
+		return A2(
+			$elm$core$Dict$filter,
+			F2(
+				function (k, _v0) {
+					return A2($elm$core$Dict$member, k, t2);
+				}),
+			t1);
+	});
+var $elm$core$Set$intersect = F2(
+	function (_v0, _v1) {
+		var dict1 = _v0;
+		var dict2 = _v1;
+		return A2($elm$core$Dict$intersect, dict1, dict2);
+	});
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $elm$core$Basics$abs = function (n) {
+	return (n < 0) ? (-n) : n;
+};
+var $author$project$Solvers$Day03$manhattanDistance = F2(
+	function (_v0, _v1) {
+		var a = _v0.a;
+		var b = _v0.b;
+		var c = _v1.a;
+		var d = _v1.b;
+		return (($elm$core$Basics$abs(a) + $elm$core$Basics$abs(b)) + $elm$core$Basics$abs(c)) + $elm$core$Basics$abs(d);
+	});
+var $elm$core$Set$foldl = F3(
+	function (func, initialState, _v0) {
+		var dict = _v0;
+		return A3(
+			$elm$core$Dict$foldl,
+			F3(
+				function (key, _v1, state) {
+					return A2(func, key, state);
+				}),
+			initialState,
+			dict);
+	});
+var $elm$core$Set$empty = $elm$core$Dict$empty;
+var $elm$core$Set$insert = F2(
+	function (key, _v0) {
+		var dict = _v0;
+		return A3($elm$core$Dict$insert, key, 0, dict);
+	});
+var $elm$core$Set$fromList = function (list) {
+	return A3($elm$core$List$foldl, $elm$core$Set$insert, $elm$core$Set$empty, list);
+};
+var $elm$core$Set$map = F2(
+	function (func, set) {
+		return $elm$core$Set$fromList(
+			A3(
+				$elm$core$Set$foldl,
+				F2(
+					function (x, xs) {
+						return A2(
+							$elm$core$List$cons,
+							func(x),
+							xs);
+					}),
+				_List_Nil,
+				set));
+	});
+var $elm$core$List$sortBy = _List_sortBy;
+var $elm$core$List$sort = function (xs) {
+	return A2($elm$core$List$sortBy, $elm$core$Basics$identity, xs);
+};
+var $author$project$Solvers$Day03$getClosestCrossingManhattanDistance = F2(
+	function (_v0, _v1) {
+		var wireA = _v0;
+		var wireB = _v1;
+		return $elm$core$List$head(
+			$elm$core$List$sort(
+				$elm$core$Set$toList(
+					A2(
+						$elm$core$Set$map,
+						$author$project$Solvers$Day03$manhattanDistance(
+							_Utils_Tuple2(0, 0)),
+						A2($elm$core$Set$intersect, wireA, wireB)))));
+	});
+var $elm$core$Result$map2 = F3(
+	function (func, ra, rb) {
+		if (ra.$ === 1) {
+			var x = ra.a;
+			return $elm$core$Result$Err(x);
+		} else {
+			var a = ra.a;
+			if (rb.$ === 1) {
+				var x = rb.a;
+				return $elm$core$Result$Err(x);
+			} else {
+				var b = rb.a;
+				return $elm$core$Result$Ok(
+					A2(func, a, b));
+			}
+		}
+	});
+var $author$project$Solvers$Day03$Wire = $elm$core$Basics$identity;
+var $author$project$Solvers$Day03$calcNewPosition = F2(
+	function (operation, _v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		switch (operation.$) {
+			case 0:
+				return _Utils_Tuple2(x, y + 1);
+			case 1:
+				return _Utils_Tuple2(x + 1, y);
+			case 3:
+				return _Utils_Tuple2(x, y - 1);
+			default:
+				return _Utils_Tuple2(x - 1, y);
+		}
+	});
+var $author$project$Solvers$Day03$operationToDistance = function (operation) {
+	switch (operation.$) {
+		case 0:
+			var distance = operation.a;
+			return distance;
+		case 1:
+			var distance = operation.a;
+			return distance;
+		case 3:
+			var distance = operation.a;
+			return distance;
+		default:
+			var distance = operation.a;
+			return distance;
+	}
+};
+var $elm$core$List$repeatHelp = F3(
+	function (result, n, value) {
+		repeatHelp:
+		while (true) {
+			if (n <= 0) {
+				return result;
+			} else {
+				var $temp$result = A2($elm$core$List$cons, value, result),
+					$temp$n = n - 1,
+					$temp$value = value;
+				result = $temp$result;
+				n = $temp$n;
+				value = $temp$value;
+				continue repeatHelp;
+			}
+		}
+	});
+var $elm$core$List$repeat = F2(
+	function (n, value) {
+		return A3($elm$core$List$repeatHelp, _List_Nil, n, value);
+	});
+var $elm$core$Dict$union = F2(
+	function (t1, t2) {
+		return A3($elm$core$Dict$foldl, $elm$core$Dict$insert, t2, t1);
+	});
+var $elm$core$Set$union = F2(
+	function (_v0, _v1) {
+		var dict1 = _v0;
+		var dict2 = _v1;
+		return A2($elm$core$Dict$union, dict1, dict2);
+	});
+var $author$project$Solvers$Day03$operateWire = F2(
+	function (operation, _v0) {
+		var setWire = _v0.a;
+		var startPosition = _v0.b;
+		return function (_v3) {
+			var newPath = _v3.a;
+			var lastPosition = _v3.b;
+			return _Utils_Tuple2(
+				A2($elm$core$Set$union, newPath, setWire),
+				lastPosition);
+		}(
+			A3(
+				$elm$core$List$foldl,
+				F2(
+					function (_v1, _v2) {
+						var set = _v2.a;
+						var lastPosition = _v2.b;
+						var newPosition = A2($author$project$Solvers$Day03$calcNewPosition, operation, lastPosition);
+						return _Utils_Tuple2(
+							A2($elm$core$Set$insert, newPosition, set),
+							newPosition);
+					}),
+				_Utils_Tuple2($elm$core$Set$empty, startPosition),
+				A2(
+					$elm$core$List$repeat,
+					$author$project$Solvers$Day03$operationToDistance(operation),
+					0)));
+	});
+var $author$project$Solvers$Day03$Down = function (a) {
+	return {$: 3, a: a};
+};
+var $author$project$Solvers$Day03$Left = function (a) {
+	return {$: 2, a: a};
+};
+var $author$project$Solvers$Day03$Right = function (a) {
+	return {$: 1, a: a};
+};
+var $author$project$Solvers$Day03$Up = function (a) {
+	return {$: 0, a: a};
+};
+var $elm$core$String$toUpper = _String_toUpper;
+var $author$project$Solvers$Day03$stringToOperation = function (a) {
+	var partDistance = $elm$core$String$toInt(
+		A2($elm$core$String$dropLeft, 1, a));
+	var partDirection = $elm$core$String$toUpper(
+		A2($elm$core$String$left, 1, a));
+	var _v0 = _Utils_Tuple2(partDirection, partDistance);
+	_v0$4:
+	while (true) {
+		if (!_v0.b.$) {
+			switch (_v0.a) {
+				case 'U':
+					var distance = _v0.b.a;
+					return $elm$core$Result$Ok(
+						$author$project$Solvers$Day03$Up(distance));
+				case 'R':
+					var distance = _v0.b.a;
+					return $elm$core$Result$Ok(
+						$author$project$Solvers$Day03$Right(distance));
+				case 'D':
+					var distance = _v0.b.a;
+					return $elm$core$Result$Ok(
+						$author$project$Solvers$Day03$Down(distance));
+				case 'L':
+					var distance = _v0.b.a;
+					return $elm$core$Result$Ok(
+						$author$project$Solvers$Day03$Left(distance));
+				default:
+					break _v0$4;
+			}
+		} else {
+			break _v0$4;
+		}
+	}
+	return $elm$core$Result$Err('\'' + (a + '\' is not a valid operation'));
+};
+var $author$project$Solvers$Day03$parseWire = A2(
+	$elm$core$Basics$composeR,
+	$elm$core$String$split(','),
+	A2(
+		$elm$core$Basics$composeR,
+		$elm$core$List$map($author$project$Solvers$Day03$stringToOperation),
+		A2(
+			$elm$core$Basics$composeR,
+			A2(
+				$elm$core$List$foldl,
+				F2(
+					function (rOperation, rOperations) {
+						return A3(
+							$elm$core$Result$map2,
+							F2(
+								function (a, b) {
+									return A2($elm$core$List$cons, a, b);
+								}),
+							rOperation,
+							rOperations);
+					}),
+				$elm$core$Result$Ok(_List_Nil)),
+			A2(
+				$elm$core$Basics$composeR,
+				$elm$core$Result$map(
+					A2(
+						$elm$core$Basics$composeR,
+						$elm$core$List$reverse,
+						A2(
+							$elm$core$List$foldl,
+							$author$project$Solvers$Day03$operateWire,
+							_Utils_Tuple2(
+								$elm$core$Set$empty,
+								_Utils_Tuple2(0, 0))))),
+				$elm$core$Result$map($elm$core$Tuple$first)))));
+var $author$project$Solvers$Day03$runPartOne = function (input) {
+	var _v0 = $elm$core$String$lines(
+		$author$project$Lib$Input$toString(input));
+	if ((_v0.b && _v0.b.b) && (!_v0.b.b.b)) {
+		var a = _v0.a;
+		var _v1 = _v0.b;
+		var b = _v1.a;
+		return A3(
+			$elm$core$Result$map2,
+			F2(
+				function (wa, wb) {
+					return A2(
+						$elm$core$Maybe$withDefault,
+						'?',
+						A2(
+							$elm$core$Maybe$map,
+							$elm$core$String$fromInt,
+							A2($author$project$Solvers$Day03$getClosestCrossingManhattanDistance, wa, wb)));
+				}),
+			$author$project$Solvers$Day03$parseWire(a),
+			$author$project$Solvers$Day03$parseWire(b));
+	} else {
+		return $elm$core$Result$Err('Given input isn\'t valid.');
+	}
+};
+var $author$project$Solvers$Day03$partOne = _Utils_Tuple2(
+	'Day 03, Part One',
+	$author$project$Lib$Solver$make($author$project$Solvers$Day03$runPartOne));
 var $author$project$Solvers$Day01$calcMassOfFuel = function (_v0) {
 	var a = _v0;
 	return a * 1;
@@ -5871,7 +6228,7 @@ var $author$project$Solvers$Day02$partTwo = _Utils_Tuple2(
 	$author$project$Lib$Solver$make($author$project$Solvers$Day02$findInput));
 var $author$project$Main$solvers = $author$project$Lib$Solver$fromList(
 	_List_fromArray(
-		[$author$project$Solvers$Day01$partOne, $author$project$Solvers$Day01$partTwo, $author$project$Solvers$Day02$partOne, $author$project$Solvers$Day02$partTwo]));
+		[$author$project$Solvers$Day01$partOne, $author$project$Solvers$Day01$partTwo, $author$project$Solvers$Day02$partOne, $author$project$Solvers$Day02$partTwo, $author$project$Solvers$Day03$partOne]));
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
