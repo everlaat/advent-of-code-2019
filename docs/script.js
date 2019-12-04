@@ -6104,6 +6104,183 @@ var $author$project$Solvers$Day03$runPartOne = function (input) {
 var $author$project$Solvers$Day03$partOne = _Utils_Tuple2(
 	'Day 03, Part One',
 	$author$project$Lib$Solver$make($author$project$Solvers$Day03$runPartOne));
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $author$project$Solvers$Day04$Password = $elm$core$Basics$identity;
+var $elm$core$List$maybeCons = F3(
+	function (f, mx, xs) {
+		var _v0 = f(mx);
+		if (!_v0.$) {
+			var x = _v0.a;
+			return A2($elm$core$List$cons, x, xs);
+		} else {
+			return xs;
+		}
+	});
+var $elm$core$List$filterMap = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			$elm$core$List$maybeCons(f),
+			_List_Nil,
+			xs);
+	});
+var $author$project$Solvers$Day04$intToPassword = function (_int) {
+	return A2(
+		$elm$core$List$filterMap,
+		$elm$core$String$toInt,
+		A2(
+			$elm$core$String$split,
+			'',
+			$elm$core$String$fromInt(_int)));
+};
+var $elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
+var $elm$core$Basics$not = _Basics_not;
+var $elm$core$List$all = F2(
+	function (isOkay, list) {
+		return !A2(
+			$elm$core$List$any,
+			A2($elm$core$Basics$composeL, $elm$core$Basics$not, isOkay),
+			list);
+	});
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
+};
+var $author$project$Solvers$Day04$hasTwoAdjacentDigits = function (_v0) {
+	var digits = _v0;
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (a, _v1) {
+				var mPrevious = _v1.a;
+				var result = _v1.b;
+				return A2(
+					$elm$core$Maybe$withDefault,
+					_Utils_Tuple2(
+						$elm$core$Maybe$Just(a),
+						result),
+					A2(
+						$elm$core$Maybe$map,
+						function (b) {
+							return ((!result) && _Utils_eq(a, b)) ? _Utils_Tuple2(
+								$elm$core$Maybe$Just(a),
+								true) : _Utils_Tuple2(
+								$elm$core$Maybe$Just(a),
+								result);
+						},
+						mPrevious));
+			}),
+		_Utils_Tuple2($elm$core$Maybe$Nothing, false),
+		digits).b;
+};
+var $author$project$Solvers$Day04$neverDecreses = function (_v0) {
+	var digits = _v0;
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (a, _v1) {
+				var mPrevious = _v1.a;
+				var result = _v1.b;
+				return A2(
+					$elm$core$Maybe$withDefault,
+					_Utils_Tuple2(
+						$elm$core$Maybe$Just(a),
+						result),
+					A2(
+						$elm$core$Maybe$map,
+						function (b) {
+							return (result && (_Utils_cmp(a, b) > -1)) ? _Utils_Tuple2(
+								$elm$core$Maybe$Just(a),
+								true) : _Utils_Tuple2(
+								$elm$core$Maybe$Just(a),
+								false);
+						},
+						mPrevious));
+			}),
+		_Utils_Tuple2($elm$core$Maybe$Nothing, true),
+		digits).b;
+};
+var $author$project$Solvers$Day04$passwordLengthIsSix = function (_v0) {
+	var digits = _v0;
+	return $elm$core$List$length(digits) === 6;
+};
+var $author$project$Solvers$Day04$validatePassword = function (password) {
+	return A2(
+		$elm$core$List$all,
+		$elm$core$Basics$eq(true),
+		A2(
+			$elm$core$List$map,
+			function (f) {
+				return f(password);
+			},
+			_List_fromArray(
+				[$author$project$Solvers$Day04$passwordLengthIsSix, $author$project$Solvers$Day04$hasTwoAdjacentDigits, $author$project$Solvers$Day04$neverDecreses])));
+};
+var $author$project$Solvers$Day04$runPartOne = function (input) {
+	var _v0 = A2(
+		$elm$core$String$split,
+		'-',
+		$author$project$Lib$Input$toString(input));
+	if ((_v0.b && _v0.b.b) && (!_v0.b.b.b)) {
+		var start = _v0.a;
+		var _v1 = _v0.b;
+		var end = _v1.a;
+		return A2(
+			$elm$core$Result$fromMaybe,
+			'couldn\'t convert start and/or end in to ints',
+			A3(
+				$elm$core$Maybe$map2,
+				F2(
+					function (intStart, intEnd) {
+						return $elm$core$String$fromInt(
+							$elm$core$List$length(
+								A2(
+									$elm$core$List$filter,
+									$author$project$Solvers$Day04$validatePassword,
+									A2(
+										$elm$core$List$map,
+										$author$project$Solvers$Day04$intToPassword,
+										A2($elm$core$List$range, intStart, intEnd)))));
+					}),
+				$elm$core$String$toInt(start),
+				$elm$core$String$toInt(end)));
+	} else {
+		return $elm$core$Result$Err('Input is invalid.');
+	}
+};
+var $author$project$Solvers$Day04$partOne = _Utils_Tuple2(
+	'Day 04, Part One',
+	$author$project$Lib$Solver$make($author$project$Solvers$Day04$runPartOne));
 var $author$project$Solvers$Day01$calcMassOfFuel = function (_v0) {
 	var a = _v0;
 	return a * 1;
@@ -6191,24 +6368,6 @@ var $author$project$Solvers$Day02$findInput = A2(
 var $author$project$Solvers$Day02$partTwo = _Utils_Tuple2(
 	'Day 02, Part Two',
 	$author$project$Lib$Solver$make($author$project$Solvers$Day02$findInput));
-var $elm$core$List$maybeCons = F3(
-	function (f, mx, xs) {
-		var _v0 = f(mx);
-		if (!_v0.$) {
-			var x = _v0.a;
-			return A2($elm$core$List$cons, x, xs);
-		} else {
-			return xs;
-		}
-	});
-var $elm$core$List$filterMap = F2(
-	function (f, xs) {
-		return A3(
-			$elm$core$List$foldr,
-			$elm$core$List$maybeCons(f),
-			_List_Nil,
-			xs);
-	});
 var $author$project$Solvers$Day03$getClosestCrossingFewestSteps = F2(
 	function (_v0, _v1) {
 		var wireA = _v0;
@@ -6256,9 +6415,12 @@ var $author$project$Solvers$Day03$runPartTwo = function (input) {
 var $author$project$Solvers$Day03$partTwo = _Utils_Tuple2(
 	'Day 03, Part Two',
 	$author$project$Lib$Solver$make($author$project$Solvers$Day03$runPartTwo));
+var $author$project$Solvers$Day04$partTwo = _Utils_Tuple2(
+	'Day 04, Part Two',
+	$author$project$Lib$Solver$make($author$project$Solvers$Day04$runPartOne));
 var $author$project$Main$solvers = $author$project$Lib$Solver$fromList(
 	_List_fromArray(
-		[$author$project$Solvers$Day01$partOne, $author$project$Solvers$Day01$partTwo, $author$project$Solvers$Day02$partOne, $author$project$Solvers$Day02$partTwo, $author$project$Solvers$Day03$partOne, $author$project$Solvers$Day03$partTwo]));
+		[$author$project$Solvers$Day01$partOne, $author$project$Solvers$Day01$partTwo, $author$project$Solvers$Day02$partOne, $author$project$Solvers$Day02$partTwo, $author$project$Solvers$Day03$partOne, $author$project$Solvers$Day03$partTwo, $author$project$Solvers$Day04$partOne, $author$project$Solvers$Day04$partTwo]));
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {

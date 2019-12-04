@@ -10,6 +10,7 @@ import Lib.Solver as Solver exposing (Solver, Solvers)
 import Solvers.Day01 as Day01
 import Solvers.Day02 as Day02
 import Solvers.Day03 as Day03
+import Solvers.Day04 as Day04
 
 
 solvers : Solvers
@@ -21,6 +22,8 @@ solvers =
         , Day02.partTwo
         , Day03.partOne
         , Day03.partTwo
+        , Day04.partOne
+        , Day04.partTwo
         ]
 
 
