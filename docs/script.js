@@ -5791,7 +5791,6 @@ var $elm$core$List$head = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
-var $elm$core$Set$Set_elm_builtin = $elm$core$Basics$identity;
 var $elm$core$Dict$foldl = F3(
 	function (func, acc, dict) {
 		foldl:
@@ -5847,12 +5846,6 @@ var $elm$core$Dict$intersect = F2(
 				}),
 			t1);
 	});
-var $elm$core$Set$intersect = F2(
-	function (_v0, _v1) {
-		var dict1 = _v0;
-		var dict2 = _v1;
-		return A2($elm$core$Dict$intersect, dict1, dict2);
-	});
 var $elm$core$Basics$negate = function (n) {
 	return -n;
 };
@@ -5867,42 +5860,6 @@ var $author$project$Solvers$Day03$manhattanDistance = F2(
 		var d = _v1.b;
 		return (($elm$core$Basics$abs(a) + $elm$core$Basics$abs(b)) + $elm$core$Basics$abs(c)) + $elm$core$Basics$abs(d);
 	});
-var $elm$core$Set$foldl = F3(
-	function (func, initialState, _v0) {
-		var dict = _v0;
-		return A3(
-			$elm$core$Dict$foldl,
-			F3(
-				function (key, _v1, state) {
-					return A2(func, key, state);
-				}),
-			initialState,
-			dict);
-	});
-var $elm$core$Set$empty = $elm$core$Dict$empty;
-var $elm$core$Set$insert = F2(
-	function (key, _v0) {
-		var dict = _v0;
-		return A3($elm$core$Dict$insert, key, 0, dict);
-	});
-var $elm$core$Set$fromList = function (list) {
-	return A3($elm$core$List$foldl, $elm$core$Set$insert, $elm$core$Set$empty, list);
-};
-var $elm$core$Set$map = F2(
-	function (func, set) {
-		return $elm$core$Set$fromList(
-			A3(
-				$elm$core$Set$foldl,
-				F2(
-					function (x, xs) {
-						return A2(
-							$elm$core$List$cons,
-							func(x),
-							xs);
-					}),
-				_List_Nil,
-				set));
-	});
 var $elm$core$List$sortBy = _List_sortBy;
 var $elm$core$List$sort = function (xs) {
 	return A2($elm$core$List$sortBy, $elm$core$Basics$identity, xs);
@@ -5913,12 +5870,15 @@ var $author$project$Solvers$Day03$getClosestCrossingManhattanDistance = F2(
 		var wireB = _v1;
 		return $elm$core$List$head(
 			$elm$core$List$sort(
-				$elm$core$Set$toList(
+				A2(
+					$elm$core$List$map,
 					A2(
-						$elm$core$Set$map,
+						$elm$core$Basics$composeR,
+						$elm$core$Tuple$first,
 						$author$project$Solvers$Day03$manhattanDistance(
-							_Utils_Tuple2(0, 0)),
-						A2($elm$core$Set$intersect, wireA, wireB)))));
+							_Utils_Tuple2(0, 0))),
+					$elm$core$Dict$toList(
+						A2($elm$core$Dict$intersect, wireA, wireB)))));
 	});
 var $elm$core$Result$map2 = F3(
 	function (func, ra, rb) {
@@ -5994,35 +5954,35 @@ var $elm$core$Dict$union = F2(
 	function (t1, t2) {
 		return A3($elm$core$Dict$foldl, $elm$core$Dict$insert, t2, t1);
 	});
-var $elm$core$Set$union = F2(
-	function (_v0, _v1) {
-		var dict1 = _v0;
-		var dict2 = _v1;
-		return A2($elm$core$Dict$union, dict1, dict2);
-	});
 var $author$project$Solvers$Day03$operateWire = F2(
 	function (operation, _v0) {
-		var setWire = _v0.a;
+		var dictWire = _v0.a;
 		var startPosition = _v0.b;
+		var startDistance = _v0.c;
 		return function (_v3) {
 			var newPath = _v3.a;
 			var lastPosition = _v3.b;
-			return _Utils_Tuple2(
-				A2($elm$core$Set$union, newPath, setWire),
-				lastPosition);
+			var lastDistance = _v3.c;
+			return _Utils_Tuple3(
+				A2($elm$core$Dict$union, newPath, dictWire),
+				lastPosition,
+				lastDistance);
 		}(
 			A3(
 				$elm$core$List$foldl,
 				F2(
 					function (_v1, _v2) {
-						var set = _v2.a;
+						var dict = _v2.a;
 						var lastPosition = _v2.b;
+						var lastDistance = _v2.c;
 						var newPosition = A2($author$project$Solvers$Day03$calcNewPosition, operation, lastPosition);
-						return _Utils_Tuple2(
-							A2($elm$core$Set$insert, newPosition, set),
-							newPosition);
+						var newDistance = lastDistance + 1;
+						return _Utils_Tuple3(
+							A3($elm$core$Dict$insert, newPosition, newDistance, dict),
+							newPosition,
+							newDistance);
 					}),
-				_Utils_Tuple2($elm$core$Set$empty, startPosition),
+				_Utils_Tuple3($elm$core$Dict$empty, startPosition, startDistance),
 				A2(
 					$elm$core$List$repeat,
 					$author$project$Solvers$Day03$operationToDistance(operation),
@@ -6107,10 +6067,15 @@ var $author$project$Solvers$Day03$parseWire = A2(
 						A2(
 							$elm$core$List$foldl,
 							$author$project$Solvers$Day03$operateWire,
-							_Utils_Tuple2(
-								$elm$core$Set$empty,
-								_Utils_Tuple2(0, 0))))),
-				$elm$core$Result$map($elm$core$Tuple$first)))));
+							_Utils_Tuple3(
+								$elm$core$Dict$empty,
+								_Utils_Tuple2(0, 0),
+								0)))),
+				$elm$core$Result$map(
+					function (_v0) {
+						var a = _v0.a;
+						return a;
+					})))));
 var $author$project$Solvers$Day03$runPartOne = function (input) {
 	var _v0 = $elm$core$String$lines(
 		$author$project$Lib$Input$toString(input));
@@ -6226,9 +6191,74 @@ var $author$project$Solvers$Day02$findInput = A2(
 var $author$project$Solvers$Day02$partTwo = _Utils_Tuple2(
 	'Day 02, Part Two',
 	$author$project$Lib$Solver$make($author$project$Solvers$Day02$findInput));
+var $elm$core$List$maybeCons = F3(
+	function (f, mx, xs) {
+		var _v0 = f(mx);
+		if (!_v0.$) {
+			var x = _v0.a;
+			return A2($elm$core$List$cons, x, xs);
+		} else {
+			return xs;
+		}
+	});
+var $elm$core$List$filterMap = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			$elm$core$List$maybeCons(f),
+			_List_Nil,
+			xs);
+	});
+var $author$project$Solvers$Day03$getClosestCrossingFewestSteps = F2(
+	function (_v0, _v1) {
+		var wireA = _v0;
+		var wireB = _v1;
+		return $elm$core$List$head(
+			$elm$core$List$sort(
+				A2(
+					$elm$core$List$filterMap,
+					function (_v2) {
+						var key = _v2.a;
+						var a = _v2.b;
+						return A2(
+							$elm$core$Maybe$map,
+							$elm$core$Basics$add(a),
+							A2($elm$core$Dict$get, key, wireB));
+					},
+					$elm$core$Dict$toList(
+						A2($elm$core$Dict$intersect, wireA, wireB)))));
+	});
+var $author$project$Solvers$Day03$runPartTwo = function (input) {
+	var _v0 = $elm$core$String$lines(
+		$author$project$Lib$Input$toString(input));
+	if ((_v0.b && _v0.b.b) && (!_v0.b.b.b)) {
+		var a = _v0.a;
+		var _v1 = _v0.b;
+		var b = _v1.a;
+		return A3(
+			$elm$core$Result$map2,
+			F2(
+				function (wa, wb) {
+					return A2(
+						$elm$core$Maybe$withDefault,
+						'?',
+						A2(
+							$elm$core$Maybe$map,
+							$elm$core$String$fromInt,
+							A2($author$project$Solvers$Day03$getClosestCrossingFewestSteps, wa, wb)));
+				}),
+			$author$project$Solvers$Day03$parseWire(a),
+			$author$project$Solvers$Day03$parseWire(b));
+	} else {
+		return $elm$core$Result$Err('Given input isn\'t valid.');
+	}
+};
+var $author$project$Solvers$Day03$partTwo = _Utils_Tuple2(
+	'Day 03, Part Two',
+	$author$project$Lib$Solver$make($author$project$Solvers$Day03$runPartTwo));
 var $author$project$Main$solvers = $author$project$Lib$Solver$fromList(
 	_List_fromArray(
-		[$author$project$Solvers$Day01$partOne, $author$project$Solvers$Day01$partTwo, $author$project$Solvers$Day02$partOne, $author$project$Solvers$Day02$partTwo, $author$project$Solvers$Day03$partOne]));
+		[$author$project$Solvers$Day01$partOne, $author$project$Solvers$Day01$partTwo, $author$project$Solvers$Day02$partOne, $author$project$Solvers$Day02$partTwo, $author$project$Solvers$Day03$partOne, $author$project$Solvers$Day03$partTwo]));
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {

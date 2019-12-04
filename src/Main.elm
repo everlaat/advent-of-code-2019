@@ -20,6 +20,7 @@ solvers =
         , Day02.partOne
         , Day02.partTwo
         , Day03.partOne
+        , Day03.partTwo
         ]
 
 
