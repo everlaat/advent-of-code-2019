@@ -6176,65 +6176,52 @@ var $author$project$Solvers$Day04$runInput = F2(
 			return $elm$core$Result$Err('Input is invalid.');
 		}
 	});
-var $elm$core$List$any = F2(
-	function (isOkay, list) {
-		any:
-		while (true) {
-			if (!list.b) {
-				return false;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				if (isOkay(x)) {
-					return true;
-				} else {
-					var $temp$isOkay = isOkay,
-						$temp$list = xs;
-					isOkay = $temp$isOkay;
-					list = $temp$list;
-					continue any;
-				}
-			}
-		}
-	});
-var $elm$core$Basics$not = _Basics_not;
-var $elm$core$List$all = F2(
-	function (isOkay, list) {
-		return !A2(
-			$elm$core$List$any,
-			A2($elm$core$Basics$composeL, $elm$core$Basics$not, isOkay),
-			list);
-	});
-var $elm$core$Tuple$second = function (_v0) {
-	var y = _v0.b;
-	return y;
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $elm$core$Dict$values = function (dict) {
+	return A3(
+		$elm$core$Dict$foldr,
+		F3(
+			function (key, value, valueList) {
+				return A2($elm$core$List$cons, value, valueList);
+			}),
+		_List_Nil,
+		dict);
 };
 var $author$project$Solvers$Day04$hasTwoAdjacentDigits = function (_v0) {
 	var digits = _v0;
 	return A3(
-		$elm$core$List$foldl,
-		F2(
-			function (a, _v1) {
-				var mPrevious = _v1.a;
-				var result = _v1.b;
-				return A2(
-					$elm$core$Maybe$withDefault,
-					_Utils_Tuple2(
-						$elm$core$Maybe$Just(a),
-						result),
-					A2(
-						$elm$core$Maybe$map,
-						function (b) {
-							return _Utils_eq(a, b) ? _Utils_Tuple2(
-								$elm$core$Maybe$Just(a),
-								true) : _Utils_Tuple2(
-								$elm$core$Maybe$Just(a),
-								result);
-						},
-						mPrevious));
-			}),
-		_Utils_Tuple2($elm$core$Maybe$Nothing, false),
-		digits).b;
+		$elm$core$Basics$composeR,
+		$elm$core$Dict$values,
+		A2(
+			$elm$core$Basics$composeR,
+			$elm$core$List$filter(
+				function (a) {
+					return a === 1;
+				}),
+			A2(
+				$elm$core$Basics$composeR,
+				$elm$core$List$length,
+				$elm$core$Basics$neq(6))),
+		A3(
+			$elm$core$List$foldl,
+			F2(
+				function (a, dict) {
+					return A2(
+						$elm$core$Maybe$withDefault,
+						A3($elm$core$Dict$insert, a, 1, dict),
+						A2(
+							$elm$core$Maybe$map,
+							function (count) {
+								return A3($elm$core$Dict$insert, a, count + 1, dict);
+							},
+							A2($elm$core$Dict$get, a, dict)));
+				}),
+			$elm$core$Dict$empty,
+			digits));
+};
+var $elm$core$Tuple$second = function (_v0) {
+	var y = _v0.b;
+	return y;
 };
 var $author$project$Solvers$Day04$neverDecreses = function (_v0) {
 	var digits = _v0;
@@ -6242,25 +6229,11 @@ var $author$project$Solvers$Day04$neverDecreses = function (_v0) {
 		$elm$core$List$foldl,
 		F2(
 			function (a, _v1) {
-				var mPrevious = _v1.a;
+				var previous = _v1.a;
 				var result = _v1.b;
-				return A2(
-					$elm$core$Maybe$withDefault,
-					_Utils_Tuple2(
-						$elm$core$Maybe$Just(a),
-						result),
-					A2(
-						$elm$core$Maybe$map,
-						function (b) {
-							return (result && (_Utils_cmp(a, b) > -1)) ? _Utils_Tuple2(
-								$elm$core$Maybe$Just(a),
-								true) : _Utils_Tuple2(
-								$elm$core$Maybe$Just(a),
-								false);
-						},
-						mPrevious));
+				return (result && (_Utils_cmp(a, previous) > -1)) ? _Utils_Tuple2(a, true) : _Utils_Tuple2(a, false);
 			}),
-		_Utils_Tuple2($elm$core$Maybe$Nothing, true),
+		_Utils_Tuple2(0, true),
 		digits).b;
 };
 var $author$project$Solvers$Day04$passwordLengthIsSix = function (_v0) {
@@ -6268,16 +6241,7 @@ var $author$project$Solvers$Day04$passwordLengthIsSix = function (_v0) {
 	return $elm$core$List$length(digits) === 6;
 };
 var $author$project$Solvers$Day04$validatePasswordPartOne = function (password) {
-	return A2(
-		$elm$core$List$all,
-		$elm$core$Basics$eq(true),
-		A2(
-			$elm$core$List$map,
-			function (f) {
-				return f(password);
-			},
-			_List_fromArray(
-				[$author$project$Solvers$Day04$passwordLengthIsSix, $author$project$Solvers$Day04$neverDecreses, $author$project$Solvers$Day04$hasTwoAdjacentDigits])));
+	return $author$project$Solvers$Day04$passwordLengthIsSix(password) && ($author$project$Solvers$Day04$neverDecreses(password) && $author$project$Solvers$Day04$hasTwoAdjacentDigits(password));
 };
 var $author$project$Solvers$Day04$partOne = _Utils_Tuple2(
 	'Day 04, Part One',
@@ -6417,6 +6381,27 @@ var $author$project$Solvers$Day03$runPartTwo = function (input) {
 var $author$project$Solvers$Day03$partTwo = _Utils_Tuple2(
 	'Day 03, Part Two',
 	$author$project$Lib$Solver$make($author$project$Solvers$Day03$runPartTwo));
+var $elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
 var $elm$core$List$member = F2(
 	function (x, xs) {
 		return A2(
@@ -6426,24 +6411,12 @@ var $elm$core$List$member = F2(
 			},
 			xs);
 	});
-var $elm$core$Dict$values = function (dict) {
-	return A3(
-		$elm$core$Dict$foldr,
-		F3(
-			function (key, value, valueList) {
-				return A2($elm$core$List$cons, value, valueList);
-			}),
-		_List_Nil,
-		dict);
-};
 var $author$project$Solvers$Day04$hasTwoAdjacentDigitsThatAreNotPartOfLargerGroup = function (_v0) {
 	var digits = _v0;
-	return function (dict) {
-		return A2(
-			$elm$core$List$member,
-			2,
-			$elm$core$Dict$values(dict));
-	}(
+	return A3(
+		$elm$core$Basics$composeR,
+		$elm$core$Dict$values,
+		$elm$core$List$member(2),
 		A3(
 			$elm$core$List$foldl,
 			F2(
@@ -6462,16 +6435,7 @@ var $author$project$Solvers$Day04$hasTwoAdjacentDigitsThatAreNotPartOfLargerGrou
 			digits));
 };
 var $author$project$Solvers$Day04$validatePasswordPartTwo = function (password) {
-	return A2(
-		$elm$core$List$all,
-		$elm$core$Basics$eq(true),
-		A2(
-			$elm$core$List$map,
-			function (f) {
-				return f(password);
-			},
-			_List_fromArray(
-				[$author$project$Solvers$Day04$passwordLengthIsSix, $author$project$Solvers$Day04$neverDecreses, $author$project$Solvers$Day04$hasTwoAdjacentDigitsThatAreNotPartOfLargerGroup])));
+	return $author$project$Solvers$Day04$passwordLengthIsSix(password) && ($author$project$Solvers$Day04$neverDecreses(password) && $author$project$Solvers$Day04$hasTwoAdjacentDigitsThatAreNotPartOfLargerGroup(password));
 };
 var $author$project$Solvers$Day04$partTwo = _Utils_Tuple2(
 	'Day 04, Part Two',

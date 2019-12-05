@@ -81,22 +81,12 @@ type Password
 
 validatePasswordPartOne : Password -> Bool
 validatePasswordPartOne password =
-    List.map (\f -> f password)
-        [ passwordLengthIsSix
-        , neverDecreses
-        , hasTwoAdjacentDigits
-        ]
-        |> List.all ((==) True)
+    passwordLengthIsSix password && neverDecreses password && hasTwoAdjacentDigits password
 
 
 validatePasswordPartTwo : Password -> Bool
 validatePasswordPartTwo password =
-    List.map (\f -> f password)
-        [ passwordLengthIsSix
-        , neverDecreses
-        , hasTwoAdjacentDigitsThatAreNotPartOfLargerGroup
-        ]
-        |> List.all ((==) True)
+    passwordLengthIsSix password && neverDecreses password && hasTwoAdjacentDigitsThatAreNotPartOfLargerGroup password
 
 
 passwordLengthIsSix : Password -> Bool
@@ -107,21 +97,18 @@ passwordLengthIsSix (Password digits) =
 hasTwoAdjacentDigits : Password -> Bool
 hasTwoAdjacentDigits (Password digits) =
     List.foldl
-        (\a ( mPrevious, result ) ->
-            Maybe.map
-                (\b ->
-                    if a == b then
-                        ( Just a, True )
-
-                    else
-                        ( Just a, result )
-                )
-                mPrevious
-                |> Maybe.withDefault ( Just a, result )
+        (\a dict ->
+            Dict.get a dict
+                |> Maybe.map (\count -> Dict.insert a (count + 1) dict)
+                |> Maybe.withDefault (Dict.insert a 1 dict)
         )
-        ( Nothing, False )
+        Dict.empty
         digits
-        |> Tuple.second
+        |> (Dict.values
+                >> List.filter (\a -> a == 1)
+                >> List.length
+                >> (/=) 6
+           )
 
 
 hasTwoAdjacentDigitsThatAreNotPartOfLargerGroup : Password -> Bool
@@ -134,28 +121,20 @@ hasTwoAdjacentDigitsThatAreNotPartOfLargerGroup (Password digits) =
         )
         Dict.empty
         digits
-        |> (\dict ->
-                Dict.values dict
-                    |> List.member 2
-           )
+        |> (Dict.values >> List.member 2)
 
 
 neverDecreses : Password -> Bool
 neverDecreses (Password digits) =
     List.foldl
-        (\a ( mPrevious, result ) ->
-            Maybe.map
-                (\b ->
-                    if result && a >= b then
-                        ( Just a, True )
+        (\a ( previous, result ) ->
+            if result && a >= previous then
+                ( a, True )
 
-                    else
-                        ( Just a, False )
-                )
-                mPrevious
-                |> Maybe.withDefault ( Just a, result )
+            else
+                ( a, False )
         )
-        ( Nothing, True )
+        ( 0, True )
         digits
         |> Tuple.second
 
