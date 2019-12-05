@@ -6436,7 +6436,7 @@ var $elm$core$Dict$values = function (dict) {
 		_List_Nil,
 		dict);
 };
-var $author$project$Solvers$Day04$twoAdjacentDigitsAreNotPartOfLargerGroup = function (_v0) {
+var $author$project$Solvers$Day04$hasTwoAdjacentDigitsThatAreNotPartOfLargerGroup = function (_v0) {
 	var digits = _v0;
 	return function (dict) {
 		return A2(
@@ -6471,7 +6471,7 @@ var $author$project$Solvers$Day04$validatePasswordPartTwo = function (password) 
 				return f(password);
 			},
 			_List_fromArray(
-				[$author$project$Solvers$Day04$passwordLengthIsSix, $author$project$Solvers$Day04$neverDecreses, $author$project$Solvers$Day04$hasTwoAdjacentDigits, $author$project$Solvers$Day04$twoAdjacentDigitsAreNotPartOfLargerGroup])));
+				[$author$project$Solvers$Day04$passwordLengthIsSix, $author$project$Solvers$Day04$neverDecreses, $author$project$Solvers$Day04$hasTwoAdjacentDigitsThatAreNotPartOfLargerGroup])));
 };
 var $author$project$Solvers$Day04$partTwo = _Utils_Tuple2(
 	'Day 04, Part Two',

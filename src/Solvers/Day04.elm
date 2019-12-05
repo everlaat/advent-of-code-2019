@@ -94,8 +94,7 @@ validatePasswordPartTwo password =
     List.map (\f -> f password)
         [ passwordLengthIsSix
         , neverDecreses
-        , hasTwoAdjacentDigits
-        , twoAdjacentDigitsAreNotPartOfLargerGroup
+        , hasTwoAdjacentDigitsThatAreNotPartOfLargerGroup
         ]
         |> List.all ((==) True)
 
@@ -125,8 +124,8 @@ hasTwoAdjacentDigits (Password digits) =
         |> Tuple.second
 
 
-twoAdjacentDigitsAreNotPartOfLargerGroup : Password -> Bool
-twoAdjacentDigitsAreNotPartOfLargerGroup (Password digits) =
+hasTwoAdjacentDigitsThatAreNotPartOfLargerGroup : Password -> Bool
+hasTwoAdjacentDigitsThatAreNotPartOfLargerGroup (Password digits) =
     List.foldl
         (\a dict ->
             Dict.get a dict
