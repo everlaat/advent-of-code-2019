@@ -6143,6 +6143,39 @@ var $author$project$Solvers$Day04$intToPassword = function (_int) {
 			'',
 			$elm$core$String$fromInt(_int)));
 };
+var $author$project$Solvers$Day04$runInput = F2(
+	function (validator, input) {
+		var _v0 = A2(
+			$elm$core$String$split,
+			'-',
+			$author$project$Lib$Input$toString(input));
+		if ((_v0.b && _v0.b.b) && (!_v0.b.b.b)) {
+			var start = _v0.a;
+			var _v1 = _v0.b;
+			var end = _v1.a;
+			return A2(
+				$elm$core$Result$fromMaybe,
+				'couldn\'t convert start and/or end in to ints',
+				A3(
+					$elm$core$Maybe$map2,
+					F2(
+						function (intStart, intEnd) {
+							return $elm$core$String$fromInt(
+								$elm$core$List$length(
+									A2(
+										$elm$core$List$filter,
+										validator,
+										A2(
+											$elm$core$List$map,
+											$author$project$Solvers$Day04$intToPassword,
+											A2($elm$core$List$range, intStart, intEnd)))));
+						}),
+					$elm$core$String$toInt(start),
+					$elm$core$String$toInt(end)));
+		} else {
+			return $elm$core$Result$Err('Input is invalid.');
+		}
+	});
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
 		any:
@@ -6246,41 +6279,10 @@ var $author$project$Solvers$Day04$validatePasswordPartOne = function (password) 
 			_List_fromArray(
 				[$author$project$Solvers$Day04$passwordLengthIsSix, $author$project$Solvers$Day04$neverDecreses, $author$project$Solvers$Day04$hasTwoAdjacentDigits])));
 };
-var $author$project$Solvers$Day04$runPartOne = function (input) {
-	var _v0 = A2(
-		$elm$core$String$split,
-		'-',
-		$author$project$Lib$Input$toString(input));
-	if ((_v0.b && _v0.b.b) && (!_v0.b.b.b)) {
-		var start = _v0.a;
-		var _v1 = _v0.b;
-		var end = _v1.a;
-		return A2(
-			$elm$core$Result$fromMaybe,
-			'couldn\'t convert start and/or end in to ints',
-			A3(
-				$elm$core$Maybe$map2,
-				F2(
-					function (intStart, intEnd) {
-						return $elm$core$String$fromInt(
-							$elm$core$List$length(
-								A2(
-									$elm$core$List$filter,
-									$author$project$Solvers$Day04$validatePasswordPartOne,
-									A2(
-										$elm$core$List$map,
-										$author$project$Solvers$Day04$intToPassword,
-										A2($elm$core$List$range, intStart, intEnd)))));
-					}),
-				$elm$core$String$toInt(start),
-				$elm$core$String$toInt(end)));
-	} else {
-		return $elm$core$Result$Err('Input is invalid.');
-	}
-};
 var $author$project$Solvers$Day04$partOne = _Utils_Tuple2(
 	'Day 04, Part One',
-	$author$project$Lib$Solver$make($author$project$Solvers$Day04$runPartOne));
+	$author$project$Lib$Solver$make(
+		$author$project$Solvers$Day04$runInput($author$project$Solvers$Day04$validatePasswordPartOne)));
 var $author$project$Solvers$Day01$calcMassOfFuel = function (_v0) {
 	var a = _v0;
 	return a * 1;
@@ -6471,41 +6473,10 @@ var $author$project$Solvers$Day04$validatePasswordPartTwo = function (password) 
 			_List_fromArray(
 				[$author$project$Solvers$Day04$passwordLengthIsSix, $author$project$Solvers$Day04$neverDecreses, $author$project$Solvers$Day04$hasTwoAdjacentDigits, $author$project$Solvers$Day04$twoAdjacentDigitsAreNotPartOfLargerGroup])));
 };
-var $author$project$Solvers$Day04$runPartTwo = function (input) {
-	var _v0 = A2(
-		$elm$core$String$split,
-		'-',
-		$author$project$Lib$Input$toString(input));
-	if ((_v0.b && _v0.b.b) && (!_v0.b.b.b)) {
-		var start = _v0.a;
-		var _v1 = _v0.b;
-		var end = _v1.a;
-		return A2(
-			$elm$core$Result$fromMaybe,
-			'couldn\'t convert start and/or end in to ints',
-			A3(
-				$elm$core$Maybe$map2,
-				F2(
-					function (intStart, intEnd) {
-						return $elm$core$String$fromInt(
-							$elm$core$List$length(
-								A2(
-									$elm$core$List$filter,
-									$author$project$Solvers$Day04$validatePasswordPartTwo,
-									A2(
-										$elm$core$List$map,
-										$author$project$Solvers$Day04$intToPassword,
-										A2($elm$core$List$range, intStart, intEnd)))));
-					}),
-				$elm$core$String$toInt(start),
-				$elm$core$String$toInt(end)));
-	} else {
-		return $elm$core$Result$Err('Input is invalid.');
-	}
-};
 var $author$project$Solvers$Day04$partTwo = _Utils_Tuple2(
 	'Day 04, Part Two',
-	$author$project$Lib$Solver$make($author$project$Solvers$Day04$runPartTwo));
+	$author$project$Lib$Solver$make(
+		$author$project$Solvers$Day04$runInput($author$project$Solvers$Day04$validatePasswordPartTwo)));
 var $author$project$Main$solvers = $author$project$Lib$Solver$fromList(
 	_List_fromArray(
 		[$author$project$Solvers$Day01$partOne, $author$project$Solvers$Day01$partTwo, $author$project$Solvers$Day02$partOne, $author$project$Solvers$Day02$partTwo, $author$project$Solvers$Day03$partOne, $author$project$Solvers$Day03$partTwo, $author$project$Solvers$Day04$partOne, $author$project$Solvers$Day04$partTwo]));

@@ -11,14 +11,14 @@ import Test exposing (Test, describe, test)
 partOne : ( String, Solver )
 partOne =
     ( "Day 04, Part One"
-    , make runPartOne
+    , make (runInput validatePasswordPartOne)
     )
 
 
 partTwo : ( String, Solver )
 partTwo =
     ( "Day 04, Part Two"
-    , make runPartTwo
+    , make (runInput validatePasswordPartTwo)
     )
 
 
@@ -55,35 +55,15 @@ tests =
     ]
 
 
-runPartOne : Input -> Output
-runPartOne input =
+runInput : (Password -> Bool) -> Input -> Output
+runInput validator input =
     case String.split "-" <| Input.toString input of
         [ start, end ] ->
             Maybe.map2
                 (\intStart intEnd ->
                     List.range intStart intEnd
                         |> List.map intToPassword
-                        |> List.filter validatePasswordPartOne
-                        |> List.length
-                        |> String.fromInt
-                )
-                (String.toInt start)
-                (String.toInt end)
-                |> Result.fromMaybe "couldn't convert start and/or end in to ints"
-
-        _ ->
-            Err "Input is invalid."
-
-
-runPartTwo : Input -> Output
-runPartTwo input =
-    case String.split "-" <| Input.toString input of
-        [ start, end ] ->
-            Maybe.map2
-                (\intStart intEnd ->
-                    List.range intStart intEnd
-                        |> List.map intToPassword
-                        |> List.filter validatePasswordPartTwo
+                        |> List.filter validator
                         |> List.length
                         |> String.fromInt
                 )
