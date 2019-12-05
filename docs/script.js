@@ -6192,7 +6192,7 @@ var $author$project$Solvers$Day04$hasTwoAdjacentDigits = function (_v0) {
 					A2(
 						$elm$core$Maybe$map,
 						function (b) {
-							return ((!result) && _Utils_eq(a, b)) ? _Utils_Tuple2(
+							return _Utils_eq(a, b) ? _Utils_Tuple2(
 								$elm$core$Maybe$Just(a),
 								true) : _Utils_Tuple2(
 								$elm$core$Maybe$Just(a),
@@ -6234,7 +6234,7 @@ var $author$project$Solvers$Day04$passwordLengthIsSix = function (_v0) {
 	var digits = _v0;
 	return $elm$core$List$length(digits) === 6;
 };
-var $author$project$Solvers$Day04$validatePassword = function (password) {
+var $author$project$Solvers$Day04$validatePasswordPartOne = function (password) {
 	return A2(
 		$elm$core$List$all,
 		$elm$core$Basics$eq(true),
@@ -6244,7 +6244,7 @@ var $author$project$Solvers$Day04$validatePassword = function (password) {
 				return f(password);
 			},
 			_List_fromArray(
-				[$author$project$Solvers$Day04$passwordLengthIsSix, $author$project$Solvers$Day04$hasTwoAdjacentDigits, $author$project$Solvers$Day04$neverDecreses])));
+				[$author$project$Solvers$Day04$passwordLengthIsSix, $author$project$Solvers$Day04$neverDecreses, $author$project$Solvers$Day04$hasTwoAdjacentDigits])));
 };
 var $author$project$Solvers$Day04$runPartOne = function (input) {
 	var _v0 = A2(
@@ -6266,7 +6266,7 @@ var $author$project$Solvers$Day04$runPartOne = function (input) {
 							$elm$core$List$length(
 								A2(
 									$elm$core$List$filter,
-									$author$project$Solvers$Day04$validatePassword,
+									$author$project$Solvers$Day04$validatePasswordPartOne,
 									A2(
 										$elm$core$List$map,
 										$author$project$Solvers$Day04$intToPassword,
@@ -6415,9 +6415,97 @@ var $author$project$Solvers$Day03$runPartTwo = function (input) {
 var $author$project$Solvers$Day03$partTwo = _Utils_Tuple2(
 	'Day 03, Part Two',
 	$author$project$Lib$Solver$make($author$project$Solvers$Day03$runPartTwo));
+var $elm$core$List$member = F2(
+	function (x, xs) {
+		return A2(
+			$elm$core$List$any,
+			function (a) {
+				return _Utils_eq(a, x);
+			},
+			xs);
+	});
+var $elm$core$Dict$values = function (dict) {
+	return A3(
+		$elm$core$Dict$foldr,
+		F3(
+			function (key, value, valueList) {
+				return A2($elm$core$List$cons, value, valueList);
+			}),
+		_List_Nil,
+		dict);
+};
+var $author$project$Solvers$Day04$twoAdjacentDigitsAreNotPartOfLargerGroup = function (_v0) {
+	var digits = _v0;
+	return function (dict) {
+		return A2(
+			$elm$core$List$member,
+			2,
+			$elm$core$Dict$values(dict));
+	}(
+		A3(
+			$elm$core$List$foldl,
+			F2(
+				function (a, dict) {
+					return A2(
+						$elm$core$Maybe$withDefault,
+						A3($elm$core$Dict$insert, a, 1, dict),
+						A2(
+							$elm$core$Maybe$map,
+							function (count) {
+								return A3($elm$core$Dict$insert, a, count + 1, dict);
+							},
+							A2($elm$core$Dict$get, a, dict)));
+				}),
+			$elm$core$Dict$empty,
+			digits));
+};
+var $author$project$Solvers$Day04$validatePasswordPartTwo = function (password) {
+	return A2(
+		$elm$core$List$all,
+		$elm$core$Basics$eq(true),
+		A2(
+			$elm$core$List$map,
+			function (f) {
+				return f(password);
+			},
+			_List_fromArray(
+				[$author$project$Solvers$Day04$passwordLengthIsSix, $author$project$Solvers$Day04$neverDecreses, $author$project$Solvers$Day04$hasTwoAdjacentDigits, $author$project$Solvers$Day04$twoAdjacentDigitsAreNotPartOfLargerGroup])));
+};
+var $author$project$Solvers$Day04$runPartTwo = function (input) {
+	var _v0 = A2(
+		$elm$core$String$split,
+		'-',
+		$author$project$Lib$Input$toString(input));
+	if ((_v0.b && _v0.b.b) && (!_v0.b.b.b)) {
+		var start = _v0.a;
+		var _v1 = _v0.b;
+		var end = _v1.a;
+		return A2(
+			$elm$core$Result$fromMaybe,
+			'couldn\'t convert start and/or end in to ints',
+			A3(
+				$elm$core$Maybe$map2,
+				F2(
+					function (intStart, intEnd) {
+						return $elm$core$String$fromInt(
+							$elm$core$List$length(
+								A2(
+									$elm$core$List$filter,
+									$author$project$Solvers$Day04$validatePasswordPartTwo,
+									A2(
+										$elm$core$List$map,
+										$author$project$Solvers$Day04$intToPassword,
+										A2($elm$core$List$range, intStart, intEnd)))));
+					}),
+				$elm$core$String$toInt(start),
+				$elm$core$String$toInt(end)));
+	} else {
+		return $elm$core$Result$Err('Input is invalid.');
+	}
+};
 var $author$project$Solvers$Day04$partTwo = _Utils_Tuple2(
 	'Day 04, Part Two',
-	$author$project$Lib$Solver$make($author$project$Solvers$Day04$runPartOne));
+	$author$project$Lib$Solver$make($author$project$Solvers$Day04$runPartTwo));
 var $author$project$Main$solvers = $author$project$Lib$Solver$fromList(
 	_List_fromArray(
 		[$author$project$Solvers$Day01$partOne, $author$project$Solvers$Day01$partTwo, $author$project$Solvers$Day02$partOne, $author$project$Solvers$Day02$partTwo, $author$project$Solvers$Day03$partOne, $author$project$Solvers$Day03$partTwo, $author$project$Solvers$Day04$partOne, $author$project$Solvers$Day04$partTwo]));
